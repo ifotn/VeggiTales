@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34024.191
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VeggiTales", "VeggiTales\VeggiTales.csproj", "{756C2D57-3AF5-41EB-803D-AD0DD9E37E30}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{756C2D57-3AF5-41EB-803D-AD0DD9E37E30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{756C2D57-3AF5-41EB-803D-AD0DD9E37E30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{756C2D57-3AF5-41EB-803D-AD0DD9E37E30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{756C2D57-3AF5-41EB-803D-AD0DD9E37E30}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {00BAD453-8543-4453-A601-6ACA270B56EC}
+	EndGlobalSection
+EndGlobal

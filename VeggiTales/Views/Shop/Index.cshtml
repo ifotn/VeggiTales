@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Shop our Veggies";
+}
+
+<h1>Choose a Category</h1>
+<ul>
+    <li>
+        <a asp-controller="Shop" asp-action="ByCategory" asp-route-name="Root Vegetables">Root Vegetables</a>
+    </li>
+    <li>
+        <a asp-controller="Shop" asp-action="ByCategory" asp-route-name="Leafy Greens">Leafy Greens</a>
+    </li>
+    <li>
+        <a asp-controller="Shop" asp-action="ByCategory" asp-route-name="Stuff on a Vine">Stuff on a Vine</a>
+    </li>
+</ul>

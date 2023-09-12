@@ -1,15 +1,25 @@
-﻿@model IEnumerable<VeggiTales.Models.Product>
+﻿@model IEnumerable<Product>
 
 @{
     ViewData["Title"] = "Choose a Product";
 }
 
 <h1>Shop for @ViewData["Category"]</h1>
-<ul>
+<section class="row card-group">
     @foreach (var product in Model)
     {
-        <li>
-            @product.Name
-        </li>
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-body text-center h-100">
+                    <h5>@product.Name</h5>
+                    <p>
+                        @String.Format("{0:c}", product.Price)
+                    </p>
+                    <a class="btn btn-primary">
+                        Add to Cart
+                    </a>
+                </div>         
+            </div>
+        </div>
     }
-</ul>
+</section>

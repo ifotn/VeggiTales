@@ -25,9 +25,9 @@ namespace VeggiTales.Controllers
             // this is strongly-typed data so we won't use ViewData
             var products = new List<Product>();
 
-            for (int i = 1; i < 11; i++)
+            for (int i = 1; i < 16; i++)
             {
-                products.Add(new Product { ProductId = i, Name = "Product " + i.ToString() });
+                products.Add(new Product { ProductId = i, Name = "Product " + i.ToString(), Price = 10 + i });
             }
 
             // pass the data to the view for display

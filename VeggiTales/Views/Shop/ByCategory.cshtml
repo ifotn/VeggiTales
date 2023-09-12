@@ -1,0 +1,15 @@
+﻿@model IEnumerable<VeggiTales.Models.Product>
+
+@{
+    ViewData["Title"] = "Choose a Product";
+}
+
+<h1>Shop for @ViewData["Category"]</h1>
+<ul>
+    @foreach (var product in Model)
+    {
+        <li>
+            @product.Name
+        </li>
+    }
+</ul>

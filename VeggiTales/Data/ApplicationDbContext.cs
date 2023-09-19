@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using VeggiTales.Models;
 
 namespace VeggiTales.Data
 {
@@ -9,5 +10,6 @@ namespace VeggiTales.Data
             : base(options)
         {
         }
+        public DbSet<VeggiTales.Models.Product> Product { get; set; } = default!;
     }
 }

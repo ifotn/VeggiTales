@@ -19,6 +19,6 @@ namespace VeggiTales.Models
         public int ProductId { get; set; }
 
         // parent ref
-        public Product Product { get; set; }
+        public Product? Product { get; set; }
     }
 }

@@ -19,7 +19,7 @@ namespace VeggiTales.Models
         public int ProductId { get; set; }
 
         // parent refs
-        public Product Product { get; set; }
-        public Order Order { get; set; }
+        public Product? Product { get; set; }
+        public Order? Order { get; set; }
     }
 }

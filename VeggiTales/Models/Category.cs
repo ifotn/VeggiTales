@@ -6,6 +6,6 @@
         public string Name { get; set; }
 
         // create child ref to Product model (1 Category / Many Products)
-        public List<Product> Products { get; set; }
+        public List<Product>? Products { get; set; }
     }
 }

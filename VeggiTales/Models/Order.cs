@@ -50,6 +50,6 @@ namespace VeggiTales.Models
         public string CustomerId { get; set; }
 
         // child ref
-        public List<OrderDetail> OrderDetails { get; set; }
+        public List<OrderDetail>? OrderDetails { get; set; }
     }
 }

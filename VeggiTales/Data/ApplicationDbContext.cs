@@ -10,6 +10,12 @@ namespace VeggiTales.Data
             : base(options)
         {
         }
-        public DbSet<VeggiTales.Models.Product> Product { get; set; } = default!;
-    }
+
+        // create a DbSet CRUD object for each model
+        public DbSet<VeggiTales.Models.Product> Products { get; set; } = default!;
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+     }
 }

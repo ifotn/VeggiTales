@@ -1,13 +1,26 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VeggiTales.Data;
 using VeggiTales.Models;
 
 namespace VeggiTales.Controllers
 {
     public class ShopController : Controller
     {
+        // class level db object
+        private readonly ApplicationDbContext _context;
+
+        // constructor using db dependency
+        public ShopController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            // use Category model to fetch categories
+            var categories = _context.Categories.OrderBy(c => c.Name).ToList();
+
+            return View(categories);
         }
 
         // GET: /Shop/ByCategory/{name}

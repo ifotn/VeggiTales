@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<VeggiTales.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
 }
 
-<h1>Index</h1>
+<h1>Products</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryId)
+                @Html.DisplayFor(modelItem => item.Category.Name)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |

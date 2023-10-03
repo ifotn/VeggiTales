@@ -1,10 +1,18 @@
-﻿@{
+﻿@model IEnumerable<Category>
+
+@{
     ViewData["Title"] = "Shop our Veggies";
 }
 
 <h1>Choose a Category</h1>
 <ul>
-    <li>
+    @foreach (var category in Model)
+    {
+        <li>
+            <a asp-controller="Shop" asp-action="ByCategory" asp-route-name="@category.Name">@category.Name</a>
+        </li>
+    }
+    @*  <li>
         <a asp-controller="Shop" asp-action="ByCategory" asp-route-name="Root Vegetables">Root Vegetables</a>
     </li>
     <li>
@@ -12,5 +20,5 @@
     </li>
     <li>
         <a asp-controller="Shop" asp-action="ByCategory" asp-route-name="Stuff on a Vine">Stuff on a Vine</a>
-    </li>
+    </li> *@
 </ul>

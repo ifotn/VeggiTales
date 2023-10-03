@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Raleway:wght@300&display=swap');
+
 html {
   font-size: 14px;
 }
@@ -18,7 +20,9 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: 'Inter', sans-serif;
+    font-family: 'Raleway', sans-serif;
 }
 
 .btn-primary {

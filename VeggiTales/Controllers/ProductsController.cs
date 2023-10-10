@@ -99,7 +99,7 @@ namespace VeggiTales.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,CategoryId,Description")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,Name,Price,CategoryId,Description")] Product product, IFormFile? Photo, String? CurrentPhoto)
         {
             if (id != product.ProductId)
             {
@@ -110,6 +110,22 @@ namespace VeggiTales.Controllers
             {
                 try
                 {
+                    // check for and upload & rename photo if there is one
+                    if (Photo != null)
+                    {
+                        var fileName = UploadPhoto(Photo);
+                        // attach new unique photo name to the current product
+                        product.Photo = fileName;
+                    }
+                    else
+                    {
+                        // if this product already has a photo, keep the current file name
+                        if (CurrentPhoto != null)
+                        {
+                            product.Photo = CurrentPhoto;
+                        }
+                    }
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }

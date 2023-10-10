@@ -15,6 +15,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
+            <th></th>
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
@@ -32,6 +33,16 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @if (@item.Photo != null)
+                {
+                    <img src="~/img/product-uploads/@item.Photo" alt="Product Photo" class="thumb" />
+                }
+                else
+                {
+                    <img src="~/img/product-uploads/placeholder.jpg" alt="Product Photo" class="thumb" />
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Price)

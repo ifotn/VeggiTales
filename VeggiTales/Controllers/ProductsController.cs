@@ -57,10 +57,18 @@ namespace VeggiTales.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,CategoryId,Description")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,Name,Price,CategoryId,Description")] Product product, IFormFile? Photo)
         {
             if (ModelState.IsValid)
             {
+                // check for and upload & rename photo if there is one
+                if (Photo != null)
+                {
+                    var fileName = UploadPhoto(Photo);
+                    // attach new unique photo name to the new product
+                    product.Photo = fileName;
+                }
+
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -163,6 +171,29 @@ namespace VeggiTales.Controllers
         private bool ProductExists(int id)
         {
           return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
+        }
+
+        private string UploadPhoto(IFormFile Photo)
+        {
+            // get temp location of uploaded photo
+            var filePath = Path.GetTempFileName();
+
+            // create a unique name to prevent overwriting using the GUID class
+            // GUID: Globally Unique Id
+            // eg. photo.jpg => abc123-photo.jpg
+            var fileName = Guid.NewGuid() + "-" + Photo.FileName;
+
+            // set destination path dynamically so it works both locally and live
+            var uploadPath = System.IO.Directory.GetCurrentDirectory() + "\\wwwroot\\img\\product-uploads\\" + fileName;
+
+            // copy the file using a FileStream object
+            using (var stream = new FileStream(uploadPath, FileMode.Create))
+            {
+                Photo.CopyTo(stream);
+            }
+
+            // return the unique file name
+            return fileName;
         }
     }
 }

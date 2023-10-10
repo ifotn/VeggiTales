@@ -38,3 +38,7 @@ body {
 a {
     color: #4CAF50;
 }
+
+.thumb {
+    width: 100px;
+}

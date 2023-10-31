@@ -11,7 +11,7 @@ using VeggiTales.Models;
 
 namespace VeggiTales.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Administrator")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

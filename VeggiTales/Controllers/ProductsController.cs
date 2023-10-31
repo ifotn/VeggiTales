@@ -11,7 +11,7 @@ using VeggiTales.Models;
 
 namespace VeggiTales.Controllers
 {
-    [Authorize(Roles = "Administrator")]
+    [Authorize(Roles = "Administrator, Super Admin")]
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;

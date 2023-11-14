@@ -25,7 +25,7 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 
-.btn-primary {
+.btn-primary, .badge-primary {
     background-color: #FF5722;
     border-color: #757575;
 }

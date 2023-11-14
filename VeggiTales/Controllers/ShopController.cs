@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using VeggiTales.Data;
 using VeggiTales.Models;
 
@@ -105,10 +106,35 @@ namespace VeggiTales.Controllers
             var customerId = GetCustomerId();
 
             // fetch the items in this cart
-            var cartItems = _context.CartItems.Where(c => c.CustomerId == customerId);  
+            var cartItems = _context.CartItems
+                .Include(c => c.Product)
+                .Where(c => c.CustomerId == customerId);
+
+            // get total # of items in user's cart & store in session var for navbar badge
+            int itemCount = (from c in cartItems
+                             select c.Quantity).Sum();
+
+            HttpContext.Session.SetInt32("ItemCount", itemCount);
 
             return View(cartItems);
         }
+
+        // GET: /Shop/RemoveFromCart/123 => delete selected cart item
+        public IActionResult RemoveFromCart(int id)
+        {
+            // get selected cart item
+            var cartItem = _context.CartItems.Find(id);
+
+            // mark for deletion
+            _context.CartItems.Remove(cartItem);
+
+            // commit to db
+            _context.SaveChanges();
+
+            // refresh cart
+            return RedirectToAction("Cart");
+        }
+
 
         public string GetCustomerId()
         {

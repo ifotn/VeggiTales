@@ -5,21 +5,46 @@
 }
 
 <h1>Shop for @ViewData["Category"]</h1>
-<section class="row card-group">
+
+@if (Model.Count() == 0)
+{
+    <h4 class="text-danger">We don't currently have anything ready in the garden.</h4>
+}
+else
+{
+    <section class="row card-group">
     @foreach (var product in Model)
     {
         <div class="col-lg-4">
             <div class="card mb-4">
                 <div class="card-body text-center h-100">
                     <h5>@product.Name</h5>
-                    <p>
+                        @if (product.Photo != null)
+                        {
+                            <img src="~/img/product-uploads/@product.Photo" alt="@product.Name Photo" class="thumb" />
+                        }
+                        else
+                        {
+                            <img src="~/img/product-uploads/placeholder.jpg" alt="@product.Name Photo" class="thumb" />
+                        }
+                        <p>
                         @String.Format("{0:c}", product.Price)
                     </p>
-                    <a class="btn btn-primary">
-                        Add to Cart
-                    </a>
+                    <form method="post" action="AddToCart">
+                        <fieldset>
+                            <label for="Quantity">Quantity: </label>
+                            <input name="Quantity" required type="number" min="1" max="999" class="small-input" />
+                        </fieldset>      
+                        <input name="ProductId" type="hidden" value="@product.ProductId" />
+                        <button class="btn btn-primary mt-3">
+                            Add to Cart
+                        </button>
+                    </form>                  
                 </div>         
             </div>
         </div>
     }
 </section>
+}
+
+  

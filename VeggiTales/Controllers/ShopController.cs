@@ -36,15 +36,37 @@ namespace VeggiTales.Controllers
 
             // use the Product model to make a mock list of products for display
             // this is strongly-typed data so we won't use ViewData
-            var products = new List<Product>();
+            //var products = new List<Product>();
 
-            for (int i = 1; i < 16; i++)
-            {
-                products.Add(new Product { ProductId = i, Name = "Product " + i.ToString(), Price = 10 + i });
-            }
+            //for (int i = 1; i < 16; i++)
+            //{
+            //    products.Add(new Product { ProductId = i, Name = "Product " + i.ToString(), Price = 10 + i });
+            //}
+
+            // fetch products from the db
+            var products = _context.Products
+                 .OrderBy(p => p.Name)
+                 .Where(p => p.Category.Name == name)             
+                .ToList();
 
             // pass the data to the view for display
             return View(products);
+        }
+
+        // POST: /Shop/AddToCart => process request to add an item to the user's cart
+        [HttpPost]
+        public IActionResult AddToCart(int ProductId, int Quantity)
+        {
+            // look up product & get price
+
+            // figure out the cart owner
+
+            // create a new product object
+
+            // save to db
+
+            // redirect to cart page
+            return RedirectToAction("Cart");
         }
     }
 }

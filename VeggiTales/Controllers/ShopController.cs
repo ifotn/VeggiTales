@@ -58,15 +58,69 @@ namespace VeggiTales.Controllers
         public IActionResult AddToCart(int ProductId, int Quantity)
         {
             // look up product & get price
+            var product = _context.Products.Find(ProductId);    
+
+            if (product == null) { 
+                return NotFound();
+            }
 
             // figure out the cart owner
+            var customerId = GetCustomerId();
 
-            // create a new product object
+            // check if product is already in this user's cart
+            var cartItem = _context.CartItems
+                .Where(c => c.ProductId == ProductId && c.CustomerId == customerId)
+                .FirstOrDefault();
 
-            // save to db
+            if (cartItem == null)
+            {
+                // create a new product object
+                cartItem = new CartItem
+                {
+                    ProductId = ProductId,
+                    Quantity = Quantity,
+                    CustomerId = customerId,
+                    Price = product.Price
+                };
+               
+                _context.CartItems.Add(cartItem);
+            }
+            else
+            {
+                cartItem.Quantity += Quantity;
+                _context.CartItems.Update(cartItem);
+            }
+
+             // save to db
+            _context.SaveChanges();
 
             // redirect to cart page
             return RedirectToAction("Cart");
+        }
+
+        // GET: /Shop/Cart => display current user's cart
+        public IActionResult Cart()
+        {
+            // identify the cart using the session var
+            var customerId = GetCustomerId();
+
+            // fetch the items in this cart
+            var cartItems = _context.CartItems.Where(c => c.CustomerId == customerId);  
+
+            return View(cartItems);
+        }
+
+        public string GetCustomerId()
+        {
+            // check for existing session var for this user
+            if (HttpContext.Session.GetString("CustomerId") == null)
+            {
+                // if there is no session var, create one using a GUID
+                HttpContext.Session.SetString("CustomerId", Guid.NewGuid().ToString());
+            }
+
+            // return the session var
+            return HttpContext.Session.GetString("CustomerId");
         }
     }
 }

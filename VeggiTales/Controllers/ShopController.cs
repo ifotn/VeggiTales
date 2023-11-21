@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VeggiTales.Data;
 using VeggiTales.Models;
@@ -56,6 +57,7 @@ namespace VeggiTales.Controllers
 
         // POST: /Shop/AddToCart => process request to add an item to the user's cart
         [HttpPost]
+        [ValidateAntiForgeryToken]  // cross-site script protection
         public IActionResult AddToCart(int ProductId, int Quantity)
         {
             // look up product & get price
@@ -147,6 +149,35 @@ namespace VeggiTales.Controllers
 
             // return the session var
             return HttpContext.Session.GetString("CustomerId");
+        }
+
+        // GET: /Shop/Checkout => show empty checkout form to get customer info
+        [Authorize]
+        public IActionResult Checkout()
+        {
+            return View();
+        }
+
+        // POST: /Shop/Checkout => process form submission to store customer info in a session var
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout([Bind("FirstName,LastName,Address,City,Province,PostalCode,Phone")] Order order)
+        {
+            // auto-fill the other 3 order properties (date, total, customer)
+            order.OrderDate = DateTime.Now;
+            order.CustomerId = User.Identity.Name;
+
+            // calc order total
+            var cartItems = _context.CartItems.Where(c => c.CustomerId == GetCustomerId());
+            order.OrderTotal = (from c in cartItems
+                                select (c.Quantity * c.Price)).Sum();
+
+            // use an extension lib to store the complex Order object as a session var
+            HttpContext.Session.SetObject("Order", order);
+
+            // redirect to stripe payment
+            return RedirectToAction("Payment");
         }
     }
 }

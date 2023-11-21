@@ -31,6 +31,7 @@ else
                         @String.Format("{0:c}", product.Price)
                     </p>
                     <form method="post" action="AddToCart">
+                        @Html.AntiForgeryToken()
                         <fieldset>
                             <label for="Quantity">Quantity: </label>
                             <input name="Quantity" required type="number" min="1" max="999" class="small-input" />

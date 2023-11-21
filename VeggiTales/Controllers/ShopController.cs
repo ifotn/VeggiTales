@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.Checkout;
 using VeggiTales.Data;
 using VeggiTales.Models;
 
@@ -10,11 +12,15 @@ namespace VeggiTales.Controllers
     {
         // class level db object
         private readonly ApplicationDbContext _context;
+        
+        // class level config object needed to read Stripe Key from appsetttings
+        private readonly IConfiguration _configuration;
 
-        // constructor using db dependency
-        public ShopController(ApplicationDbContext context)
+        // constructor using db dependencies
+        public ShopController(ApplicationDbContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         public IActionResult Index()
@@ -178,6 +184,47 @@ namespace VeggiTales.Controllers
 
             // redirect to stripe payment
             return RedirectToAction("Payment");
+        }
+
+        // GET: /Shop/Payment => invoke stripe payment page & response
+        [Authorize]
+        public IActionResult Payment()
+        {
+            // get the order from our session var
+            var order = HttpContext.Session.GetObject<Order>("Order");
+
+            // get stripe SecretKey from app configuration
+            StripeConfiguration.ApiKey = _configuration.GetValue<string>("StripeSecretKey");
+
+            // source: https://stripe.com/docs/checkout/quickstart and modified
+            var domain = "https://" + Request.Host; // get domain dynamically (local or live)
+            var options = new SessionCreateOptions
+            {
+                LineItems = new List<SessionLineItemOptions>
+                {
+                  new SessionLineItemOptions
+                  {
+                      PriceData = new SessionLineItemPriceDataOptions
+                      {
+                          UnitAmount = (long?)(order.OrderTotal * 100), // must be in cents
+                          Currency = "cad",
+                          ProductData = new SessionLineItemPriceDataProductDataOptions
+                          {
+                              Name = "VeggiTales Purchase"
+                          }
+                      },
+                    Quantity = 1,
+                  },
+                },
+                Mode = "payment",
+                SuccessUrl = domain + "/Shop/SaveOrder",
+                CancelUrl = domain + "/Shop/Cart",
+            };
+            var service = new SessionService();
+            Session session = service.Create(options);
+
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
         }
     }
 }

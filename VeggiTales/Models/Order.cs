@@ -10,6 +10,7 @@ namespace VeggiTales.Models
         public DateTime OrderDate { get; set; }
 
         [Display(Name = "Order Total")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal OrderTotal { get; set; }
 
         [Required]

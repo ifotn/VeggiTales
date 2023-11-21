@@ -226,5 +226,46 @@ namespace VeggiTales.Controllers
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }
+
+        // GET: /Shop/SaveOrder => save Order after payment & show confirmation
+        [Authorize]
+        public IActionResult SaveOrder()
+        {
+            // get the order from session var
+            var order = HttpContext.Session.GetObject<Order>("Order");
+
+            // save new order to db
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
+            // save the line items 
+            var cartItems = _context.CartItems.Where(c => c.CustomerId == GetCustomerId());
+            foreach (var item in cartItems)
+            {
+                var orderDetail = new OrderDetail
+                {
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    Price = item.Price,
+                    OrderId = order.OrderId
+                };
+
+                _context.OrderDetails.Add(orderDetail);
+            }
+            _context.SaveChanges(); 
+
+            // empty user's cart
+            foreach (var item in cartItems)
+            {
+                _context.CartItems.Remove(item);
+            }
+            _context.SaveChanges();
+
+            // clear all session vars
+            HttpContext.Session.Clear();
+
+            // redirect to order confirmation => /Orders/Details/4
+            return RedirectToAction("Details", "Orders", new { @id = order.OrderId });
+        }
     }
 }

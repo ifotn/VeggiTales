@@ -25,7 +25,7 @@ namespace VeggiTales.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Categories != null ? 
-                          View(await _context.Categories.ToListAsync()) :
+                          View("Index", await _context.Categories.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
         }
 

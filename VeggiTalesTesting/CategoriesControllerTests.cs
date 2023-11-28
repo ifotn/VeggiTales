@@ -14,35 +14,15 @@ namespace VeggiTalesTesting
     [TestClass]
     public class CategoriesControllerTests
     {
+        // class vars for use in all tests
+        ApplicationDbContext _context;
+        CategoriesController controller;
 
-        [TestMethod]
-        public void IndexReturnsView()
+        // setup method, runs automatically before every test but not a unit test itself
+        [TestInitialize]
+        public void TestInitialize()
         {
-            // arrange
-            // mock db
-            ApplicationDbContext _context;
-
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                .Options;
-            _context = new ApplicationDbContext(options);
-
-            CategoriesController controller = new CategoriesController(_context);
-
-            // act 
-            var result = (ViewResult)controller.Index().Result;
-
-            // assert
-            Assert.AreEqual("Index", result.ViewName);
-        }
-
-        [TestMethod]
-        public void IndexReturnsCategories()
-        {
-            // arrange
-            // mock db
-            ApplicationDbContext _context;
-
+            // mock the db
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
@@ -60,14 +40,33 @@ namespace VeggiTalesTesting
 
             _context.SaveChanges();
 
-            CategoriesController controller = new CategoriesController(_context);
+            // instantiate controller w/db dependency for all tests
+            controller = new CategoriesController(_context);
+        }
+
+        [TestMethod]
+        public void IndexReturnsView()
+        {
+            // arrange (now done in TestInitialize)            
+
+            // act 
+            var result = (ViewResult)controller.Index().Result;
+
+            // assert
+            Assert.AreEqual("Index", result.ViewName);
+        }
+
+        [TestMethod]
+        public void IndexReturnsCategories()
+        {
+            // arrange
 
             // act 
             var result = (ViewResult)controller.Index().Result;
             var model = (List<Category>)result.Model;
 
             // assert
-            CollectionAssert.AreEqual(_context.Categories.ToList(), model);
+            CollectionAssert.AreEqual(_context.Categories.OrderBy(c => c.Name).ToList(), model);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace VeggiTalesTesting
         ApplicationDbContext _context;
         CategoriesController controller;
 
-        // setup method, runs automatically before every test but not a unit test itself
+        // setup method, runs automatically before every test but not a unit test itself. doesn't have to be called
         [TestInitialize]
         public void TestInitialize()
         {
@@ -44,6 +44,7 @@ namespace VeggiTalesTesting
             controller = new CategoriesController(_context);
         }
 
+        #region "Index"
         [TestMethod]
         public void IndexReturnsView()
         {
@@ -68,5 +69,49 @@ namespace VeggiTalesTesting
             // assert
             CollectionAssert.AreEqual(_context.Categories.OrderBy(c => c.Name).ToList(), model);
         }
+        #endregion
+
+        #region "Details"
+        [TestMethod]
+        public void DetailsNullIdReturnsErrorView()
+        {
+            // act => execute w/o any id value
+            var result = (ViewResult)controller.Details(null).Result;
+
+            // assert
+            Assert.AreEqual("Error", result.ViewName);
+        }
+
+        [TestMethod]
+        public void DetailsInvalidIdReturnsErrorView()
+        {
+            // act => execute w/any value NOT in mock data in TestInitialize() above
+            var result = (ViewResult)controller.Details(934).Result;
+
+            // assert
+            Assert.AreEqual("Error", result.ViewName);
+        }
+
+        [TestMethod]
+        public void DetailsValidIdReturnsDetailsView()
+        {
+            // act => execute w/any id value in mock data in TestInitialize() above
+            var result = (ViewResult)controller.Details(742).Result;
+
+            // assert
+            Assert.AreEqual("Details", result.ViewName);
+        }
+
+        [TestMethod]
+        public void DetailsValidIdReturnsCategory()
+        {
+            // act => execute w/any id value in mock data in TestInitialize() above
+            var result = (ViewResult)controller.Details(742).Result;
+            var model = (Category)result.Model;
+
+            // assert
+            Assert.AreEqual(_context.Categories.Find(742), model);
+        }
+        #endregion
     }
 }

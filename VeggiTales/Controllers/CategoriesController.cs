@@ -35,17 +35,17 @@ namespace VeggiTales.Controllers
         {
             if (id == null || _context.Categories == null)
             {
-                return NotFound();
+                return View("Error"); // NotFound();
             }
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
             if (category == null)
             {
-                return NotFound();
+                return View("Error"); // NotFound();
             }
 
-            return View(category);
+            return View("Details", category);
         }
 
         // GET: Categories/Create
